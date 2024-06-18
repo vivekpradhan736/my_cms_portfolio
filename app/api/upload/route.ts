@@ -10,10 +10,10 @@ export async function POST(request: Request){
     const file = await request.blob();
     const header = headers();
     const fileName = header.get("X-Vercel-Filename");
-
+    
     if(fileName) {
         await supabase.storage.from(bucketName).upload(fileName, file);
-
+        
         const { data } = supabase.storage.from(bucketName).getPublicUrl(fileName);
 
         return NextResponse.json({

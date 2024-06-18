@@ -46,20 +46,28 @@ export default function BlogsPage() {
 
   const deleteBlog = async (id: string) => {
     setLoading(true);
-    const res = await fetch("/api/blogs", {
-      method: "DELETE",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({ id }),
-    });
-    const response = await res.json();
-    if (response?.status === 204) {
-      // Reload the list data
-      fetchBlogs();
+    try {
+      const res = await fetch("/api/blogs", {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+  
+      if (res.status === 204) {
+        // Successful deletion, reload the list data
+        fetchBlogs();
+      } else {
+        // Handle errors for other status codes
+        const response = await res.json();
+        console.error(response.message);
+      }
+    } catch (error) {
+      console.error('An unexpected error occurred:', error);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   useEffect(() => {

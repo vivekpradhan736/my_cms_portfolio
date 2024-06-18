@@ -10,6 +10,8 @@ import { useRouter } from "next/navigation";
 import Select, { MultiValue, OptionProps } from "react-select";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm, SubmitHandler } from "react-hook-form";
+import Image from "next/image";
+import CreatableSelect from "react-select/creatable";
 
 type Variants = "blog" | "project";
 
@@ -19,6 +21,8 @@ type Inputs = {
   description: string;
   tags: number;
   cover_url: string;
+  github_link: string;
+  live_link: string;
 };
 
 interface BlogFormProps {
@@ -27,7 +31,13 @@ interface BlogFormProps {
   value?: Inputs;
 }
 
-const blogsTags = [
+type TagOption = {
+  label: string;
+  value: string;
+  name: string;
+};
+
+const blogsTags: TagOption[] = [
   {
     label: "HTML",
     value: "HTML",
@@ -90,6 +100,8 @@ export default function BlogForm({
       description: value?.description || "",
       tags: value?.tags || [],
       cover_url: value?.cover_url || "",
+      github_link: value?.github_link || "",
+      live_link: value?.live_link || ""
     }
   );
 
@@ -125,11 +137,9 @@ export default function BlogForm({
         },
         body: JSON.stringify(blogData),
       });
-      console.log("req", req);
     }
 
     const response = await req.json();
-    console.log("response", response);
 
     setLoading(false);
 
@@ -147,6 +157,8 @@ export default function BlogForm({
       description: data?.description || "",
       tags: blogForm?.tags || [],
       cover_url: blogForm?.cover_url || "",
+      github_link: blogForm?.github_link || "",
+      live_link: blogForm?.live_link || ""
     }
 
     setLoading(true);
@@ -226,8 +238,11 @@ export default function BlogForm({
           </Label>
           <div className="max-w-[120px]">
             {blogForm?.cover_url && (
-              <img
+              <Image
                 src={blogForm?.cover_url}
+                width={500}
+                height={500}
+                alt="image"
                 className="w-full h-auto rounded-md"
               />
             )}
@@ -279,26 +294,69 @@ export default function BlogForm({
           disableLocalStorage
         />
       </div>
+      {
+        variant === "project" && (
+          <div className="mt-4">
+          <Label htmlFor="content" className="capitalize">{variant} Tags</Label>
+          <CreatableSelect
+            defaultValue={getDefaultValue(blogForm.tags)}
+            isMulti
+            name="tags"
+            options={blogsTags}
+            onChange={(value: MultiValue<TagOption>) => {
+              const tags = value.map((v) => v.value);
+              setBlogForm({ tags });
+            }}
+            className="basic-multi-select"
+            classNamePrefix="select"
+          />
+        </div>
+        )
+      }
+      {
+        variant === "project" && (
       <div className="mt-4">
-        <Label htmlFor="content" className="capitalize">
-          {variant} Tags
+        <Label htmlFor="email" className="capitalize">
+          {variant} Github URL
         </Label>
-        <Select
-          defaultValue={getDefaultValue(blogForm.tags)}
-          isMulti
-          name="tags"
-          options={blogsTags}
-          onChange={(value: MultiValue<{ name: string }>) => {
-            if (value && value.length > 0) {
-              const tags = value.map((v: { name: string }) => v?.name);
-
-              setBlogForm({ tags: tags });
-            }
-          }}
-          className="basic-multi-select"
-          classNamePrefix="select"
+        <Input
+          type="url"
+          pattern="https://.*"
+          value={blogForm.github_link}
+          {...register("github_link", { required: false })}
+          placeholder="Github URL"
+          className={`mt-2 ${
+            errors.github_link ? "bg-red-100 border-red-500" : ""
+          }`}
+          onChange={(e) =>
+            setBlogForm({ github_link: e.target.value })
+          }
         />
       </div>
+        )
+      }
+      {
+        variant === "project" && (
+      <div className="mt-4">
+        <Label htmlFor="email" className="capitalize">
+          {variant} Live URL
+        </Label>
+        <Input
+          type="url"
+          pattern="https://.*"
+          value={blogForm.live_link}
+          {...register("live_link", { required: false })}
+          placeholder="Live URL"
+          className={`mt-2 ${
+            errors.live_link ? "bg-red-100 border-red-500" : ""
+          }`}
+          onChange={(e) =>
+            setBlogForm({ live_link: e.target.value })
+          }
+        />
+      </div>
+        )
+      }
       <div className="mt-4 text-right">
         <Button
           variant={"secondary"}

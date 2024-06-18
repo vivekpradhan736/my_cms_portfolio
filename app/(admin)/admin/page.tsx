@@ -1,10 +1,6 @@
 'use client';
 
-import {
-    Card,
-    CardContent,
-    CardTitle,
-  } from "@/components/ui/card"
+import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { useEffect, useReducer } from "react"
 
 interface dataReducer {

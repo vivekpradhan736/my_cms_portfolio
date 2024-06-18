@@ -7,13 +7,12 @@ export default async function LoginForm({ searchParams }: { searchParams: { mess
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
-    const {
-        data: { user },
-    } = await supabase.auth.getUser();
+    const { data: { user }, } = await supabase.auth.getUser();
 
+    
     const signIn = async (formData: FormData) => { 
         "use server";
-
+        
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
         const cookieStore = cookies();

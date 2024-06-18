@@ -46,12 +46,30 @@ export async function PATCH(request: Request) {
     return NextResponse.json(response)
 }
 
-export async function DELETE(request: Request) {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    const data = await request.json();
+// export async function DELETE(request: Request) {
+//     const cookieStore = cookies();
+//     const supabase = createClient(cookieStore);
+//     const data = await request.json();
     
-    const response = await supabase.from("blogs").delete().eq('id', data.id);
+//     const response = await supabase.from("blogs").delete().eq('id', data.id);
 
-    return NextResponse.json(response) 
+//     return NextResponse.json(response) 
+// }
+
+export async function DELETE(request: Request) {
+    try {
+        const cookieStore = cookies();
+        const supabase = createClient(cookieStore);
+        const data = await request.json();
+
+        const { error } = await supabase.from("blogs").delete().eq('id', data.id);
+
+        if (error) {
+            return NextResponse.json({ status: 'error', message: error.message }, { status: 400 });
+        }
+
+        return new NextResponse(null, { status: 204 }); // Return 204 No Content without a body
+    } catch (error: any) {
+        return NextResponse.json({ status: 'error', message: error.message }, { status: 500 });
+    }
 }

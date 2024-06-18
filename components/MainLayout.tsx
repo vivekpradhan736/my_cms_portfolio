@@ -97,7 +97,7 @@ export default async function MainLayout({ children }: MainLayoutProps) {
             </div>
           </div>
         </header>
-        <div className="absolute left-60 right-0 bottom-0 top-24 right-5">
+        <div className="absolute left-60 bottom-0 top-24 right-0">
           <div className="container">
             {children}
           </div>
