@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Logo from "@/public/images/logo.svg";
+import Logo from "@/public/images/vivek_logo.png";
 import Image from "next/image";
 import {
   Sheet,

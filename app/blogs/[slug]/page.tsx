@@ -76,7 +76,7 @@ function Blog({ params }: BlogProps) {
                 src={response?.data?.cover_url}
                 width={500}
                 height={500}
-                className="w-full"
+                className=""
                 alt={response?.data?.title}
               />
               <Editor
