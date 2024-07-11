@@ -98,7 +98,6 @@ export default function BlogForm({
       title: value?.title || "",
       content: value?.content || "",
       description: value?.description || "",
-      tags: value?.tags || [],
       cover_url: value?.cover_url || "",
       github_link: value?.github_link || "",
       live_link: value?.live_link || ""
@@ -115,7 +114,6 @@ export default function BlogForm({
       title: data?.title || "",
       content: blogForm?.content || "",
       description: data?.description || "",
-      tags: blogForm?.tags || [],
       cover_url: blogForm?.cover_url || "",
     }
 
@@ -140,6 +138,7 @@ export default function BlogForm({
     }
 
     const response = await req.json();
+    console.log("response",response)
 
     setLoading(false);
 
