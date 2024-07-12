@@ -10,6 +10,7 @@ import Link from "next/link";
 import Button from "@/website-components/ui/Button";
 import { FaGithub } from "react-icons/fa";
 import { FaArrowCircleRight } from "react-icons/fa";
+import Profile2 from "@/public/images/MyPic.png";
 
 interface ProjectProps {
   params: {
@@ -18,6 +19,7 @@ interface ProjectProps {
 }
 
 function Project({ params }: ProjectProps) {
+  const [readTime, setReadTime] = useState<number | undefined>(undefined)
   const [response, setResponse] = useReducer(
     (prev: any, next: any) => {
       return { ...prev, ...next };
@@ -59,6 +61,29 @@ function Project({ params }: ProjectProps) {
   useEffect(() => {
     fetchProjects();
   }, []);
+
+  useEffect(() => {
+    const calculateTextSize = (contentArray: any[]): number => {
+      let totalLength = 0;
+      contentArray.forEach((item) => {
+        if (item.text) {
+          totalLength += item.text.length;
+        }
+        if (item.content && Array.isArray(item.content)) {
+          totalLength += calculateTextSize(item.content);
+        }
+      });
+      return totalLength;
+    };
+
+    if (response.data && response.data.content && Array.isArray(response.data.content.content)) {
+      const totalTextSize = calculateTextSize(response.data.content.content);
+      const readTime = Math.floor(totalTextSize / 500);
+      setReadTime(readTime);
+    } else {
+      console.log('Content or response data is missing or not an array.');
+    }
+  }, [response.data]);
   return (
     <WebsiteMainLayout>
       <section className="pt-4 pb-10 relative z-10">
@@ -74,7 +99,7 @@ function Project({ params }: ProjectProps) {
           </div>
         ) : (
           <>
-          <div className="flex justify-between w-full">
+          <div className="flex justify-between w-full sm:mx-12">
             <ul className="flex mb-2 gap-3 h-fit w-1/2 flex-wrap">
               {response.data?.tags?.slice(0, visibleTags).map((tag: string, index: number) => (
                 <li
@@ -83,12 +108,14 @@ function Project({ params }: ProjectProps) {
                 >
                   {tag}
                 </li>
-              ))}
+              ))}{
+                response.data?.tags?.length > 5 && (
             <div className="text-sm mt-2 text-[#777575]">
               <button onClick={toggleShowTags}>
                 {showAllTags ? "less..." : "more..."}
               </button>
             </div>
+                )}
             </ul>
             <div className="flex gap-3 w-1/2 justify-end">
               {
@@ -111,14 +138,37 @@ function Project({ params }: ProjectProps) {
               }
             </div>
             </div>
+            <div className="sm:mx-12">
             <SubTitle title={response?.data?.title} />
             <Paragraph content={response?.data?.description} />
+            </div>
+            <div className=" flex items-center gap-3 py-1 mb-5 sm:mx-12">
             <div>
+                <Image src={Profile2} alt="Profile" className="max-w-sm w-12" data-aos="fade-up"/> 
+            </div>
+              <div className="">
+                <div className="flex text-lg font-sans font-medium">
+                  <h3>Vivek Pradhan •</h3>
+                  <h3><Link
+                      href="/#contact"
+                      className="text-lg text-green-500 hover:text-green-700 pl-2 cursor-pointer"
+                      property=""
+                    > contact
+                    </Link></h3>
+                </div>
+                <div className="flex items-center text-base ">
+                  <h3 className="text-[#6e6e6e] text-[1rem]">Deployed in <a className="hover:underline text-[#111111ec] font-mono" href="">Server</a></h3>
+                  <h3 className="text-[#6e6e6e] text-[0.9rem] pl-2">• {readTime} min read</h3>
+                  <h3 className="text-[#6e6e6e] text-[0.9rem] pl-2">• {new Date(response?.data?.created_at).toLocaleDateString('en-US', {year: 'numeric',month: 'short',day: 'numeric'})}</h3>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col items-center">
               <Image
                 src={response?.data?.cover_url}
                 width={500}
                 height={500}
-                className="w-full"
+                className=""
                 alt={response?.data?.title}
               />
               <Editor

@@ -10,6 +10,13 @@ import { config } from "@/constant";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface BlogProps {
   title: string;
@@ -59,7 +66,16 @@ function Blogs() {
         </div>
         <div>
           <div className="flex gap-10 flex-col md:flex-row">
+          <Carousel
+          opts={{
+            align: "start",
+          }}
+          data-aos="fade-in"
+          className="w-full max-w-sm md:max-w-5xl m-auto"
+        >
+          <CarouselContent>
             {response?.loading ? (
+              <CarouselItem className="md:basis-1/2 lg:basis-1/3">
               <div className="animate-pulse flex space-x-4">
                 <div className="flex-1 space-y-6 py-1">
                   <div className="h-28 w-full bg-slate-200 rounded"></div>
@@ -69,9 +85,15 @@ function Blogs() {
                   </div>
                 </div>
               </div>
+              </CarouselItem>
             ) : (
               <>
                 {response?.data?.map((blog: BlogProps, index: number) => (
+                  <CarouselItem
+                  key={index}
+                  className="md:basis-1/2 lg:basis-1/3"
+                  data-aos="fade-up"
+                >
                   <div className="w-full" key={index.toString()} data-aos="fade-up">
                     <Link href={`/blogs/${blog?.id}`}>
                     <div className="w-72 rounded-lg overflow-hidden  shadow-lg  ">
@@ -86,9 +108,14 @@ function Blogs() {
                     </p>
                   </Link>
                   </div>
+                  </CarouselItem>
                 ))}
               </>
             )}
+            </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
           </div>
         </div>
       </div>
