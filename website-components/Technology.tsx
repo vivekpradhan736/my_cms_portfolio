@@ -7,6 +7,7 @@ const Technology = () => {
     <section className='bg-tertiary py-12'>
         <div className=" mx-auto">
             <div className='example-2 grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 md:grid-flow-row lg:gap-3' data-aos="fade-up">
+              <ul>
             <li className="icon-content">
           <a
             data-social="skills"
@@ -186,6 +187,7 @@ const Technology = () => {
           </a>
           <div className="tooltip">Python</div>
         </li>
+        </ul>
             </div>
         </div>
     </section>
