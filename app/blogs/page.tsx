@@ -2,7 +2,6 @@
 
 import React, { useEffect, useReducer, useCallback, useState } from "react";
 import WebsiteMainLayout from "@/website-components/layout/WebsiteMainLayout";
-import Link from "next/link";
 import SubTitle from "@/website-components/ui/SubTitle";
 import ThemeContext from "../context/ThemeContext";
 import BlogCard from "@/components/BlogCard";
@@ -10,9 +9,10 @@ import ProjectCardSkeleton from "@/components/ProjectCardSkeleton";
 
 function Blogs() {
   const [response, setResponse] = useReducer(
-    (prev: any, next: any) => {
-      return { ...prev, ...next };
-    },
+    (prev: any, next: any) => ({
+      ...prev,
+      ...next,
+    }),
     {
       data: [],
       loading: true,
@@ -21,7 +21,7 @@ function Blogs() {
     }
   );
 
-  const [mode, setMode] = useState(localStorage.getItem("colorTheme") || "darkMode");
+  const [mode, setMode] = useState<string>("darkMode");
 
   // Toggle theme function
   const toggleTheme = useCallback(() => {
@@ -30,22 +30,28 @@ function Blogs() {
     localStorage.setItem("colorTheme", newMode);
   }, [mode]);
 
+  // Fetch projects from API
   const fetchProjects = async () => {
     setResponse({ loading: true });
-    const res = await fetch(`/api/blogs?limit=6`, {
-      method: "GET",
-    });
-    const response = await res.json();
-    console.log("response",response)
-
-    setResponse({
-      data: response.data,
-      loading: false,
-    });
+    try {
+      const res = await fetch(`/api/blogs?limit=6`);
+      const response = await res.json();
+      console.log("response", response);
+      setResponse({
+        data: response.data,
+        loading: false,
+      });
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      setResponse({ loading: false });
+    }
   };
 
+  // Initialize localStorage and fetch projects on client-side
   useEffect(() => {
-    fetchProjects();
+    const savedMode = localStorage.getItem("colorTheme") || "darkMode";
+    setMode(savedMode); // Set theme from localStorage
+    fetchProjects(); // Fetch blog data
   }, []);
 
   return (
