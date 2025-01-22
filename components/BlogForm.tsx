@@ -12,6 +12,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Image from "next/image";
 import CreatableSelect from "react-select/creatable";
+import { format } from "date-fns"
+import { CalendarIcon } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 type Variants = "blog" | "project";
 
@@ -23,6 +32,8 @@ type Inputs = {
   cover_url: string;
   github_link: string;
   live_link: string;
+  start_date: string;
+  end_date: string;
 };
 
 interface BlogFormProps {
@@ -56,7 +67,7 @@ const blogsTags: TagOption[] = [
 ];
 
 const getDefaultValue = (value: string[]) => {
-  if (value.length > 0) {
+  if (value?.length > 0) {
     return value.map((v) => {
       return {
         label: v,
@@ -100,13 +111,20 @@ export default function BlogForm({
       description: value?.description || "",
       cover_url: value?.cover_url || "",
       github_link: value?.github_link || "",
-      live_link: value?.live_link || ""
+      live_link: value?.live_link || "",
+      start_date: value?.start_date || "",
+      end_date: value?.end_date || ""
     }
   );
+  console.log("blogForm",blogForm)
 
   const updateContent = useCallback((data: editorProps) => {
     setBlogForm({ content: data.getJSON() });
   }, []);
+
+  const [startDate, setStartDate] = useState<Date>()
+  const [endDate, setEndDate] = useState<Date>()
+  console.log("date",startDate)
 
   const onSubmitBlog: SubmitHandler<Inputs> = async (data) => {
     let req;
@@ -157,8 +175,11 @@ export default function BlogForm({
       tags: blogForm?.tags || [],
       cover_url: blogForm?.cover_url || "",
       github_link: blogForm?.github_link || "",
-      live_link: blogForm?.live_link || ""
+      live_link: blogForm?.live_link || "",
+      start_date: blogForm?.start_date || "",
+      end_date: blogForm?.end_date || ""
     }
+    console.log("ProjectData",ProjectData)
 
     setLoading(true);
 
@@ -310,6 +331,77 @@ export default function BlogForm({
             classNamePrefix="select"
           />
         </div>
+        )
+      }
+      {
+        variant === "project" && (
+          <div className="md:flex md:justify-between md:w-[50%]">
+      <div className="mt-4">
+        <Label htmlFor="email" className="capitalize">
+          {variant} Start Date
+        </Label>
+        <div>
+<Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant={"outline"}
+          className={cn(
+            "w-[280px] justify-start text-left font-normal border-[1.7px] border-gray-300 flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-2 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+            !startDate && "text-muted-foreground"
+          )}
+        >
+          <CalendarIcon />
+          {startDate ? format(startDate, "PPP") : <span>Pick a start date</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0">
+        <Calendar
+          mode="single"
+          selected={startDate}
+          onSelect={(startDate) => {
+            setStartDate(startDate); // Set the date
+            setBlogForm({ start_date: startDate }); // Update the blog form
+          }}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
+    </div>
+      </div>
+
+<div className="mt-4">
+<Label htmlFor="email" className="capitalize">
+  {variant} End Date
+</Label>
+<div>
+<Popover>
+<PopoverTrigger asChild>
+<Button
+  variant={"outline"}
+  className={cn(
+    "w-[280px] justify-start text-left font-normal border-[1.7px] border-gray-300 flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-2 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground  disabled:cursor-not-allowed disabled:opacity-50",
+    !endDate && "text-muted-foreground"
+  )}
+>
+  <CalendarIcon />
+  {endDate ? format(endDate, "PPP") : <span>Pick a end date</span>}
+</Button>
+</PopoverTrigger>
+<PopoverContent className="w-auto p-0">
+<Calendar
+  mode="single"
+  selected={endDate}
+  onSelect={(endDate) => {
+    setEndDate(endDate); // Set the date
+    setBlogForm({ end_date: endDate }); // Update the blog form
+  }}
+  initialFocus
+/>
+</PopoverContent>
+</Popover>
+</div>
+</div>
+</div>
         )
       }
       {

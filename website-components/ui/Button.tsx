@@ -16,7 +16,7 @@ function Button({ children, variant, onClick }: ButtonProperties) {
               onClick();
             }
           }}
-          className="text-slate-400 cursor-pointer flex items-center gap-2 hover:text-slate-700"
+          className="text-slate-400 cursor-pointer flex items-center gap-1 px-3 py-[9.5px] rounded-md hover:text-slate-700 hover:bg-[#16a34a1c] hover:dark:text-slate-100"
         >
           {children}
         </button>
@@ -29,7 +29,7 @@ function Button({ children, variant, onClick }: ButtonProperties) {
               onClick();
             }
           }}
-          className="flex items-center cursor-pointer text-sm gap-1 px-4 py-3 bg-green-600 hover:bg-green-700 transition-colors delay-75 text-white rounded-md"
+          className="flex items-center cursor-pointer text-sm gap-1 px-4 py-3 bg-primaryColor hover:bg-primaryColorHover transition-colors delay-75 text-white rounded-md"
         >
           {children}
         </button>

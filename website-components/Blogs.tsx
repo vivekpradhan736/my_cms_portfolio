@@ -100,7 +100,7 @@ function Blogs() {
                     <img src={blog?.cover_url} alt="Blog" className="object-contain rounded-lg"  />
                     </div>
                     {/* <Image src={blog?.cover_url} alt="Project" width={300} height={300}/> */}
-                    <Link href={`/blogs/${blog?.id}`} className="text-lg text-green-600 font-medium mt-4 block">
+                    <Link href={`/blogs/${blog?.id}`} className="text-lg text-primaryColor font-medium mt-4 block">
                       {blog?.title}
                     </Link>
                     <p className="text-slate-400 font-light line-clamp-4">

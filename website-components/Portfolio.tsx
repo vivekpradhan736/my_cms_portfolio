@@ -73,20 +73,8 @@ function Projects() {
         <Title title={config.portfolio.title} />
         <SubTitle title={config.portfolio.subTitle} />
         <Paragraph content={config.portfolio.content} />
-        <div className="inline-block" data-aos="fade-up">
-          <Button
-            onClick={() => {
-              router.push("/projects");
-            }}
-          >
-            <span className="mr-1">
-              <EyeOpenIcon />
-            </span>{" "}
-            View all Projects
-          </Button>
-        </div>
       </div>
-      <div className="mt-8">
+      <div className="mt-1">
         <Carousel
           opts={{
             align: "start",
@@ -123,7 +111,7 @@ function Projects() {
                       <Card className="p-1">
                         <CardHeader>
                           <Link href={`/projects/${project?.id}`}>
-                          <CardTitle className="text-xl text-green-600 font-medium block">{project.title}</CardTitle>
+                          <CardTitle className="text-xl text-primaryColor font-medium block">{project.title}</CardTitle>
                           </Link>
                           <CardDescription className="mt-1 text-base text-slate-400 font-light line-clamp-4">
                             {project.description}
@@ -174,6 +162,18 @@ function Projects() {
           <CarouselNext />
         </Carousel>
       </div>
+      <div className="inline-block" data-aos="fade-up">
+          <Button
+            onClick={() => {
+              router.push("/projects");
+            }}
+          >
+            <span className="mr-1">
+              <EyeOpenIcon />
+            </span>{" "}
+            View All Projects
+          </Button>
+        </div>
     </div>
   );
 }

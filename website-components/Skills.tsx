@@ -28,9 +28,9 @@ function Skills() {
         <div className="flex gap-10 flex-col sm:flex-row sm:justify-evenly">
           {config.mySkills.skills.map((skill, index: number) => (
             <div className="w-48" key={index.toString()} data-aos="fade-up">
-              <skill.icon width={36} height={36} className="text-slate-500"/>
-              <h4 className="text-lg font-medium mt-4 mb-1">{skill.title}</h4>
-              <p className="text-slate-400 font-light">{skill.subTitle}</p>
+              <skill.icon width={36} height={36} className="text-slate-500 dark:text-slate-200"/>
+              <h4 className="text-lg dark:text-primaryColor font-medium mt-4 mb-1">{skill.title}</h4>
+              <p className="text-slate-400 dark:text-slate-200 font-light">{skill.subTitle}</p>
             </div>
           ))}
         </div>

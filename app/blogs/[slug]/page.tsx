@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState, useCallback } from "react";
 import WebsiteMainLayout from "@/website-components/layout/WebsiteMainLayout";
 import SubTitle from "@/website-components/ui/SubTitle";
 import Paragraph from "@/website-components/ui/Paragraph";
@@ -8,6 +8,7 @@ import Image from "next/image";
 import { Editor } from "novel";
 import Profile2 from "@/public/images/MyPic.png";
 import Link from "next/link";
+import ThemeContext from "@/app/context/ThemeContext";
 
 interface BlogProps {
   params: {
@@ -16,6 +17,14 @@ interface BlogProps {
 }
 
 function Blog({ params }: BlogProps) {
+  const [mode, setMode] = useState(localStorage.getItem("colorTheme") || "darkMode");
+  // Toggle theme function
+  const toggleTheme = useCallback(() => {
+    const newMode = mode === "darkMode" ? "lightMode" : "darkMode";
+    setMode(newMode);
+    localStorage.setItem("colorTheme", newMode);
+  }, [mode]);
+
   const [readTime, setReadTime] = useState<number | undefined>(undefined)
   const [response, setResponse] = useReducer(
     (prev: any, next: any) => {
@@ -75,7 +84,8 @@ function Blog({ params }: BlogProps) {
     }
   }, [response.data]);
   return (
-    <WebsiteMainLayout>
+    <ThemeContext.Provider  value={mode}>
+    <WebsiteMainLayout toggleTheme={toggleTheme}>
       <section className="pt-4 pb-10 relative z-10">
         {response?.loading ? (
           <div
@@ -141,6 +151,7 @@ function Blog({ params }: BlogProps) {
         )}
       </section>
     </WebsiteMainLayout>
+    </ThemeContext.Provider>
   );
 }
 

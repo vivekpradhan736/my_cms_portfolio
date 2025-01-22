@@ -67,7 +67,7 @@ function ContactForm() {
             <div className="md:w-full">
               <input
                 type="text"
-                className={`border border-slate-300 w-full p-3 rounded ${
+                className={`border border-slate-300 dark:border-slate-600 dark:bg-[#1111113f] focus:outline-primaryColor hover:border-primaryColor contrast-more:border-slate-400 w-full p-3 rounded ${
                   errors.fullName && "border-red-500 bg-red-100"
                 }`}
                 placeholder="Full Name"
@@ -82,7 +82,7 @@ function ContactForm() {
             <div className="md:w-full">
               <input
                 type="text"
-                className={`border border-slate-300 w-full p-3 rounded ${
+                className={`border border-slate-300 dark:border-slate-600 dark:bg-[#1111113f] focus:outline-primaryColor hover:border-primaryColor w-full p-3 rounded ${
                   errors.email && "border-red-500 bg-red-100"
                 }`}
                 placeholder="Your Email"
@@ -105,7 +105,7 @@ function ContactForm() {
             <div className="md:w-full">
               <input
                 type="text"
-                className="border border-slate-300 w-full p-3 rounded"
+                className="border border-slate-300 dark:border-slate-600 dark:bg-[#1111113f] focus:outline-primaryColor hover:border-primaryColor w-full p-3 rounded"
                 placeholder="Phone Number"
                 {...register("number")}
               />
@@ -113,7 +113,7 @@ function ContactForm() {
             <div className="md:w-full">
               <input
                 type="budget"
-                className="border border-slate-300 w-full p-3 rounded"
+                className="border border-slate-300 dark:border-slate-600 dark:bg-[#1111113f] focus:outline-primaryColor hover:border-primaryColor w-full p-3 rounded"
                 placeholder="Budget"
                 {...register("budget")}
               />
@@ -122,7 +122,7 @@ function ContactForm() {
           <div className="mt-6">
             <textarea
               rows={6}
-              className={`border border-slate-300 w-full p-3 rounded ${
+              className={`border border-slate-300 dark:border-slate-600 dark:bg-[#1111113f] focus:outline-primaryColor hover:border-primaryColor w-full p-3 rounded ${
                 errors.description && "border-red-500 bg-red-100"
               }`}
               placeholder="Description"

@@ -88,15 +88,50 @@ function Project({ params }: ProjectProps) {
     <WebsiteMainLayout>
       <section className="pt-4 pb-10 relative z-10">
         {response?.loading ? (
-          <div className="animate-pulse flex space-x-4 mt-12">
-            <div className="flex-1 space-y-6 py-1">
-              <div className="h-28 w-full bg-slate-200 rounded"></div>
-              <div className="space-y-3">
-                <div className="h-2 bg-slate-200 rounded"></div>
-                <div className="h-2 bg-slate-200 rounded"></div>
+          <div className="w-full max-w-4xl mx-auto animate-pulse">
+          <div className="flex justify-between w-full sm:mx-12 mb-4">
+            <div className="w-1/2">
+              <div className="flex flex-wrap gap-3">
+                {[...Array(5)].map((_, index) => (
+                  <div key={index} className="h-6 w-16 bg-gray-300 rounded"></div>
+                ))}
+              </div>
+            </div>
+            <div className="flex gap-3 w-1/2 justify-end">
+              <div className="h-10 w-20 bg-gray-300 rounded-md"></div>
+              <div className="h-10 w-20 bg-gray-300 rounded-md"></div>
+            </div>
+          </div>
+    
+          <div className="sm:mx-12 mb-4">
+            <div className="h-8 w-3/4 bg-gray-300 mb-2"></div>
+            <div className="h-4 w-full bg-gray-300 mb-1"></div>
+            <div className="h-4 w-full bg-gray-300 mb-1"></div>
+            <div className="h-4 w-2/3 bg-gray-300"></div>
+          </div>
+    
+          <div className="flex items-center gap-3 py-1 mb-5 sm:mx-12">
+            <div className="h-12 w-12 bg-gray-300 rounded-full"></div>
+            <div className="flex-1">
+              <div className="h-6 w-40 bg-gray-300 mb-2"></div>
+              <div className="flex gap-2">
+                <div className="h-4 w-24 bg-gray-300"></div>
+                <div className="h-4 w-24 bg-gray-300"></div>
+                <div className="h-4 w-24 bg-gray-300"></div>
               </div>
             </div>
           </div>
+    
+          <div className="flex flex-col items-center">
+            <div className="h-64 w-full max-w-2xl bg-gray-300 mb-4"></div>
+            <div className="w-full">
+              <div className="h-4 w-full bg-gray-300 mb-2"></div>
+              <div className="h-4 w-full bg-gray-300 mb-2"></div>
+              <div className="h-4 w-full bg-gray-300 mb-2"></div>
+              <div className="h-4 w-3/4 bg-gray-300 mb-2"></div>
+            </div>
+          </div>
+        </div>
         ) : (
           <>
           <div className="flex justify-between w-full sm:mx-12">

@@ -32,10 +32,77 @@ const config = {
     ],
     rightMenu: [
       {
-        name: "Download CV",
+        name: "Resume",
       },
     ],
   },
+  // skill
+  skills : [
+  {
+    image: "/images/html.svg",
+    name: "HTML",
+  },
+  {
+    image: "/images/css.svg",
+    name: "CSS",
+  },
+  {
+    image: "/images/javascript.svg",
+    name: "JavaScript",
+  },
+  {
+    image: "/images/reactjs.svg",
+    name: "React.js",
+  },
+  {
+    image: "/images/nextjs.svg",
+    name: "Next.js",
+  },
+  {
+    image: "/images/nodejs.svg",
+    name: "Node.js",
+  },
+  {
+    image: "/images/git.svg",
+    name: "Git",
+  },
+  {
+    image: "/images/figma.svg",
+    name: "Figma",
+  },
+  {
+    image: "/images/bootstrap.svg",
+    name: "Bootstrap",
+  },
+  {
+    image: "/images/mongodb.svg",
+    name: "MongoDB",
+  },
+  {
+    image: "/images/typescript.svg",
+    name: "TypeScript",
+  },
+  {
+    image: "/images/github.svg",
+    name: "GitHub",
+  },
+  {
+    image: "/images/express.svg",
+    name: "Express.js",
+  },
+  {
+    image: "/images/tailwindcss.svg",
+    name: "Tailwind CSS",
+  },
+  {
+    image: "/images/c++.svg",
+    name: "C++",
+  },
+  {
+    image: "/images/python.svg",
+    name: "Python",
+  },
+],
   banner: {
     title: "Welcome",
     heading: "I have Creative Design Experience",
@@ -53,15 +120,15 @@ const config = {
   info: {
     data: [
       {
-        title: "80+",
+        title: "02+",
         subTitle: "Satisfied clients",
       },
       {
-        title: "200+",
+        title: "04+",
         subTitle: "Projects completed",
       },
       {
-        title: "99+",
+        title: "10+",
         subTitle: "Reviews given",
       },
     ],
@@ -137,7 +204,7 @@ const config = {
     subTitle: "My latest articles",
     content:
       "I have selected and mentioned here some of my latest blogs to share with you.",
-    actionButton: "View All",
+    actionButton: "View All Blogs",
   },
   contact: {
     title: "Contact",

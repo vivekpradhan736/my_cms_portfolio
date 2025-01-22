@@ -10,7 +10,7 @@ function ContactForm() {
   return (
     <div className="flex flex-col md:flex-row md:justify-between justify-center gap-11 py-8">
       <div className="flex gap-4">
-        <span className="p-3 rounded bg-green-500 inline-block">
+        <span className="p-3 rounded bg-primaryColor inline-block">
           <MobileIcon width={26} height={26} className="text-white"/>
         </span>
         <div>
@@ -19,7 +19,7 @@ function ContactForm() {
         </div>
       </div>
       <div className="flex gap-4">
-        <span className="p-3 rounded bg-green-500 inline-block">
+        <span className="p-3 rounded bg-primaryColor inline-block">
           <EnvelopeClosedIcon width={26} height={26} className="text-white"/>
         </span>
         <div>
@@ -28,7 +28,7 @@ function ContactForm() {
         </div>
       </div>
       <div className="flex gap-4">
-        <span className="p-3 rounded bg-green-500 inline-block">
+        <span className="p-3 rounded bg-primaryColor inline-block">
           <HomeIcon width={26} height={26} className="text-white"/>
         </span>
         <div>
