@@ -6,8 +6,8 @@ const Technology = () => {
   return (
     <section className='bg-tertiary py-12'>
         <div className=" mx-auto">
-            <div className='example-2 grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 md:grid-flow-row lg:gap-3' data-aos="fade-up">
-              <ul>
+            <div  data-aos="fade-up">
+              <ul className='example-2 grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 md:grid-flow-row lg:gap-3'>
             <li className="icon-content">
           <a
             data-social="skills"
