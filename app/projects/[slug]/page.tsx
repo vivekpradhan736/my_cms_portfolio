@@ -57,8 +57,6 @@ function Project({ params }: ProjectProps) {
       method: "GET",
     });
     const response = await res.json();
-    console.log("response",response)
-
     setResponse({
       data: response.data,
       loading: false,
