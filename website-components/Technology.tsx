@@ -7,7 +7,7 @@ const Technology = () => {
     <section className='bg-tertiary py-12'>
         <div className=" mx-auto">
             <div  data-aos="fade-up">
-              <ul className='example-2 grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 md:grid-flow-row lg:gap-3'>
+              <ul className='example-2 flex flex-wrap justify-center gap-4'>
             <li className="icon-content">
           <a
             data-social="skills"
