@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useCallback } from "react";
 import WebsiteMainLayout from "@/website-components/layout/WebsiteMainLayout";
 import SubTitle from "@/website-components/ui/SubTitle";
 import Paragraph from "@/website-components/ui/Paragraph";
@@ -19,6 +19,7 @@ interface ProjectProps {
 }
 
 function Project({ params }: ProjectProps) {
+  const [mode, setMode] = useState("darkMode");
   const [readTime, setReadTime] = useState<number | undefined>(undefined)
   const [response, setResponse] = useReducer(
     (prev: any, next: any) => {
@@ -31,6 +32,12 @@ function Project({ params }: ProjectProps) {
       page: 0,
     }
   );
+
+  const toggleTheme = useCallback(() => {
+        const newMode = mode === "darkMode" ? "lightMode" : "darkMode";
+        setMode(newMode);
+        localStorage.setItem("colorTheme", newMode);
+      }, [mode]);
 
   const [showAllTags, setShowAllTags] = useState(false);
   const [visibleTags, setVisibleTags] = useState<number>(5); // Initially show 5 tags
@@ -85,7 +92,7 @@ function Project({ params }: ProjectProps) {
     }
   }, [response.data]);
   return (
-    <WebsiteMainLayout>
+    <WebsiteMainLayout toggleTheme={toggleTheme}>
       <section className="pt-4 pb-10 relative z-10">
         {response?.loading ? (
           <div className="w-full max-w-4xl mx-auto animate-pulse">

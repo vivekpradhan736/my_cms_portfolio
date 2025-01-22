@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useReducer } from "react";
+import React, { useCallback, useEffect, useReducer, useState } from "react";
 import WebsiteMainLayout from "@/website-components/layout/WebsiteMainLayout";
 import Link from "next/link";
 import SubTitle from "@/website-components/ui/SubTitle";
@@ -9,6 +9,7 @@ import ProjectCard from "@/components/ProjectCard";
 import Image from "next/image";
 
 function Projects() {
+  const [mode, setMode] = useState("darkMode");
   const [response, setResponse] = useReducer(
     (prev: any, next: any) => {
       return { ...prev, ...next };
@@ -20,6 +21,12 @@ function Projects() {
       page: 0,
     }
   );
+
+  const toggleTheme = useCallback(() => {
+      const newMode = mode === "darkMode" ? "lightMode" : "darkMode";
+      setMode(newMode);
+      localStorage.setItem("colorTheme", newMode);
+    }, [mode]);
 
   const fetchProjects = async () => {
     setResponse({ loading: true });
@@ -40,7 +47,7 @@ function Projects() {
   }, []);
 
   return (
-    <WebsiteMainLayout>
+    <WebsiteMainLayout toggleTheme={toggleTheme}>
       <section className="py-10 relative z-10">
         <SubTitle title="Selected Projects" />
         {response?.loading == false && !response?.data && (
