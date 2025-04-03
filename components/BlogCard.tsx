@@ -8,7 +8,7 @@ export default function BlogCard({ blog }: { blog: any }) {
         <div className="grid md:grid-cols-2 gap-20 items-center pb-12">
             <div className="space-y-4">
                 <Link
-                    href={`/blogs/${blog.id}`}
+                    href={`/blogs/${blog?._id}`}
                 >
                     <h2 className="text-3xl font-bold hover:underline cursor-pointer">{blog.title}</h2>
                 </Link>
@@ -26,7 +26,7 @@ export default function BlogCard({ blog }: { blog: any }) {
 
                     <div className="">
                         <Link
-                            href={`/blogs/${blog.id}`}
+                            href={`/blogs/${blog?._id}`}
                         >
                             <button className="text-blue-600 text-sm font-semibold underline-offset-4 hover:underline duration-1000">
                                 View Case Study
@@ -45,7 +45,7 @@ export default function BlogCard({ blog }: { blog: any }) {
         src={blog.cover_url}
         alt={`${blog.title} project screenshot`}
         fill
-        className="object-cover group-hover:blur-sm transition-all duration-500"
+        className="object-cover border border-[#d0cfcf] rounded-2xl group-hover:blur-sm transition-all duration-500"
       />
     </div>
         </div>

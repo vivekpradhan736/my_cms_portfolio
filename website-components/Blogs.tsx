@@ -22,7 +22,7 @@ interface BlogProps {
   title: string;
   cover_url: string;
   description: string;
-  id: string;
+  _id: string;
 }
 
 function Blogs() {
@@ -47,7 +47,7 @@ function Blogs() {
     const responseData = await res.json();
     
     setResponse({
-      data: responseData?.data,
+      data: responseData,
       loading: false,
     });
   };
@@ -95,12 +95,12 @@ function Blogs() {
                   data-aos="fade-up"
                 >
                   <div className="w-full" key={index.toString()} data-aos="fade-up">
-                    <Link href={`/blogs/${blog?.id}`}>
+                    <Link href={`/blogs/${blog?._id}`}>
                     <div className="w-72 rounded-lg overflow-hidden  shadow-lg  ">
                     <img src={blog?.cover_url} alt="Blog" className="object-contain rounded-lg"  />
                     </div>
                     {/* <Image src={blog?.cover_url} alt="Project" width={300} height={300}/> */}
-                    <Link href={`/blogs/${blog?.id}`} className="text-lg text-primaryColor font-medium mt-4 block">
+                    <Link href={`/blogs/${blog?._id}`} className="text-lg text-primaryColor font-medium mt-4 block">
                       {blog?.title}
                     </Link>
                     <p className="text-slate-400 font-light line-clamp-4">

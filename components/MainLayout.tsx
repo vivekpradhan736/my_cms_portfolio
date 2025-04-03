@@ -1,8 +1,7 @@
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+"use client";
+
 import SideNavigation from "./SideNavigation";
-import { ReactNode } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
 import {
@@ -10,37 +9,50 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import NavigationHeading from "./NavigationHeading";
-
+import { useRouter } from "next/navigation";
 
 interface MainLayoutProps {
   children: ReactNode;
 }
 
-export default async function MainLayout({ children }: MainLayoutProps) {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+export default function MainLayout({ children }: MainLayoutProps) {
+  const router = useRouter(); // ✅ Use Next.js router
+  const [userData, setUserData] = useState<any>(null); // Use `any` or a type for userData
+  const [userDataLoading, setUserDataLoading] = useState<boolean>(true);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    const isAuthenticated = async () => {
+      if (typeof window !== "undefined") {
+        const userDetails = localStorage.getItem("userDetails");
+        if (userDetails) {
+          const user = JSON.parse(userDetails);
+          setUserData(user);
+        }
+      }
+      setUserDataLoading(false);
+    };
 
-  const signOut = async () => {
-    "use server";
+    isAuthenticated();
+  }, []);
 
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    await supabase.auth.signOut();
-    return redirect("/login");
+  // Redirect if no user data and not loading
+  useEffect(() => {
+    if (!userDataLoading && !userData) {
+      router.push("/login");
+    }
+  }, [userData, userDataLoading, router]);
+
+  const signOut = () => {
+    window.location.href = "/login";
   };
 
-  if (!user) {
-    return redirect("/login");
+  if (userDataLoading) {
+    return <p>Loading user data...</p>; // Show loading while user data is being fetched
   }
 
   return (
@@ -55,7 +67,9 @@ export default async function MainLayout({ children }: MainLayoutProps) {
             <div className="flex gap-6 justify-center">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant={"outline"}><PlusIcon className="mr-2"/> Create</Button>
+                  <Button variant={"outline"}>
+                    <PlusIcon className="mr-2" /> Create
+                  </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-40" align="end">
                   <Link href={"/admin/projects/create"}>
@@ -73,18 +87,13 @@ export default async function MainLayout({ children }: MainLayoutProps) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Avatar>
-                    <AvatarImage
-                      src="https://github.com/shadcn.png"
-                      alt="@shadcn"
-                    />
-                    <AvatarFallback>
-                      {user?.email && user.email[0]}
-                    </AvatarFallback>
+                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                    <AvatarFallback>{userData?.email && userData.email[0]}</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end">
                   <DropdownMenuItem className="text-gray-500">
-                    {user?.email}
+                    {userData?.email}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <form action={signOut}>
@@ -98,30 +107,9 @@ export default async function MainLayout({ children }: MainLayoutProps) {
           </div>
         </header>
         <div className="absolute left-60 bottom-0 top-24 right-0">
-          <div className="container">
-            {children}
-          </div>
+          <div className="container">{children}</div>
         </div>
-        {/* <div className="p-5 mt-20 max-w-6xl ml-auto mr-auto w-1/2"></div> */}
       </section>
     </main>
   );
-
-  // return user ? (
-  //   <div className="flex items-center gap-4">
-  //     Hey, {user.email}!
-  //     <form action={signOut}>
-  //       <button className="py-2 px-4 rounded-md no-underline bg-btn-background hover:bg-btn-background-hover">
-  //         Logout
-  //       </button>
-  //     </form>
-  //   </div>
-  // ) : (
-  //   <Link
-  //     href="/login"
-  //     className="py-2 px-3 flex rounded-md no-underline bg-btn-background hover:bg-btn-background-hover"
-  //   >
-  //     Login
-  //   </Link>
-  // )
 }

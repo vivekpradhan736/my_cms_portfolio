@@ -30,7 +30,7 @@ interface ProjectProps {
   title: string;
   cover_url: string;
   description: string;
-  id: string;
+  _id: string;
   github_link: string;
   live_link: string;
 }
@@ -58,7 +58,7 @@ function Projects() {
     const response = await res.json();
 
     setResponse({
-      data: response.data,
+      data: response,
       loading: false,
     });
   };
@@ -110,7 +110,7 @@ function Projects() {
                     <div className="p-1">
                       <Card className="p-1">
                         <CardHeader>
-                          <Link href={`/projects/${project?.id}`}>
+                          <Link href={`/projects/${project?._id}`}>
                           <CardTitle className="text-xl text-primaryColor font-medium block">{project.title}</CardTitle>
                           </Link>
                           <CardDescription className="mt-1 text-base text-slate-400 font-light line-clamp-4">
@@ -129,7 +129,7 @@ function Projects() {
                         <CardFooter className="flex justify-between gap-4">
                           <Button
                             onClick={() => {
-                              router.push(`/projects/${project.id}`);
+                              router.push(`/projects/${project._id}`);
                             }}
                           >
                             <EyeOpenIcon /> Details

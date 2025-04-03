@@ -1,75 +1,122 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
+
 import { NextResponse } from "next/server";
+import {connectDB} from "@/db";
+import Blog from "@/models/blog";
+
+export async function POST(req: Request) {
+  try {
+    await connectDB(); // Connect to MongoDB
+
+    const { title, content, description, cover_url } = await req.json();
+    console.log("title",title)
+    console.log("content",content)
+    console.log("description",description)
+    console.log("cover_url",cover_url)
+
+    // Create and save the new blog post
+    const newBlog = await Blog.create({
+      title,
+      content,
+      description,
+      cover_url,
+    });
+
+    return NextResponse.json({ data: newBlog }, { status: 201 });
+  } catch (error) {
+    console.error("Error creating blog:", error);
+    return NextResponse.json({ message: "Error creating blog post", error }, { status: 500 });
+  }
+}
+
 
 export async function GET(request: Request) {
-    let response;
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+  try {
+    // Connect to MongoDB
+    await connectDB();
+
+    // Parse query parameters from URL
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
     const term = searchParams.get("term") || "";
     const page = parseInt(searchParams.get("page") || '0');
     const limit = parseInt(searchParams.get("limit") || '10');
-    // Start index from 0 
-    const programLimit = limit - 1;
-    const from = page * limit;
-    const to = from + programLimit;
-    
-    if(id) {
-        response = await supabase.from("blogs").select().eq('id', id).single();
+
+    // Pagination logic
+    const skip = page * limit; // Number of documents to skip
+    const programLimit = limit; // Limit of documents to return
+
+    let response;
+
+    if (id) {
+      // Fetch a single blog by ID
+      response = await Blog.findById(id);
+      if (!response) {
+        return NextResponse.json({ message: "Blog not found" }, { status: 404 });
+      }
     } else {
-        response = await supabase.from("blogs").select().ilike('title', `%${term}%`).range(from, to);
+      // Fetch blogs with search term and pagination
+      response = await Blog.find({ title: { $regex: term, $options: "i" } }) // Case-insensitive search
+        .skip(skip) // Pagination skip
+        .limit(programLimit); // Pagination limit
     }
-    return NextResponse.json(response)
+
+    return NextResponse.json(response);
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    return NextResponse.json({ message: "Error fetching blogs", error }, { status: 500 });
+  }
 }
 
-export async function POST(request: Request) {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    const data = await request.json();
-    
-    const response = await supabase.from("blogs").insert(data).select().single();
+export async function PATCH(req: Request) {
+  try {
+    await connectDB(); // Connect to MongoDB
 
-    return NextResponse.json(response)   
-}
-
-export async function PATCH(request: Request) {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    const data = await request.json();
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    
-    const response = await supabase.from("blogs").update(data).eq('id', id).select().single();
 
-    return NextResponse.json(response)
+    if (!id) {
+      return NextResponse.json({ message: "Missing blog ID" }, { status: 400 });
+    }
+
+    const data = await req.json();
+
+    // Find and update the blog post
+    const updatedBlog = await Blog.findByIdAndUpdate(id, data, { new: true });
+
+    if (!updatedBlog) {
+      return NextResponse.json({ message: "Blog not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ data: updatedBlog });
+  } catch (error) {
+    console.error("Error updating blog:", error);
+    return NextResponse.json({ message: "Error updating blog post", error }, { status: 500 });
+  }
 }
 
-// export async function DELETE(request: Request) {
-//     const cookieStore = cookies();
-//     const supabase = createClient(cookieStore);
-//     const data = await request.json();
-    
-//     const response = await supabase.from("blogs").delete().eq('id', data.id);
+export async function DELETE(req: Request) {
+  try {
+    await connectDB(); // Connect to MongoDB
 
-//     return NextResponse.json(response) 
-// }
+    const data = await req.json();
+    const { id } = data;
 
-export async function DELETE(request: Request) {
-    try {
-        const cookieStore = cookies();
-        const supabase = createClient(cookieStore);
-        const data = await request.json();
-
-        const { error } = await supabase.from("blogs").delete().eq('id', data.id);
-
-        if (error) {
-            return NextResponse.json({ status: 'error', message: error.message }, { status: 400 });
-        }
-
-        return new NextResponse(null, { status: 204 }); // Return 204 No Content without a body
-    } catch (error: any) {
-        return NextResponse.json({ status: 'error', message: error.message }, { status: 500 });
+    if (!id) {
+      return NextResponse.json({ status: "error", message: "Missing blog ID" }, { status: 400 });
     }
+
+    // Find and delete the blog post
+    const deletedBlog = await Blog.findByIdAndDelete(id);
+
+    if (!deletedBlog) {
+      return NextResponse.json({ status: "error", message: "Blog not found" }, { status: 404 });
+    }
+
+    return new NextResponse(null, { status: 204 }); // 204 No Content (successful delete)
+  } catch (error) {
+    console.error("Error deleting blog:", error);
+    return NextResponse.json({ status: "error", message: "Error deleting blog post", error }, { status: 500 });
+  }
 }

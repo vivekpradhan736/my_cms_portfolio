@@ -49,7 +49,7 @@ function Blog({ params }: BlogProps) {
     console.log("response",response)
 
     setResponse({
-      data: response.data,
+      data: response,
       loading: false,
     });
   };

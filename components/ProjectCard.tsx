@@ -84,7 +84,7 @@ export default function ProjectCard({ project }: { project: any }) {
         <div className="grid md:grid-cols-2 gap-20 items-center pb-12">
             <div className="space-y-6">
                 <Link
-                    href={`/projects/${project.id}`}
+                    href={`/projects/${project._id}`}
                 >
                     <h2 className="text-4xl font-bold hover:underline cursor-pointer">{project.title}</h2>
                 </Link>
@@ -145,7 +145,7 @@ export default function ProjectCard({ project }: { project: any }) {
   })}
                         </div>
                         <Link
-                            href={`/projects/${project.id}`}
+                            href={`/projects/${project._id}`}
                         >
                             <Button variant="link" className="text-blue-600 font-semibold">
                                 View Case Study

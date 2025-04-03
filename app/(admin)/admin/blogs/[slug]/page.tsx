@@ -22,7 +22,7 @@ export default function BlogDetailPage({ params }:BlogDetailPageProps) {
     const fetchBlog = async () => {
         const response = await fetch(`/api/blogs?id=${params.slug}`).then(res => res.json());
         
-        setResponse({ data: response.data, loading: false })
+        setResponse({ data: response, loading: false })
     }
 
     useEffect(() => {

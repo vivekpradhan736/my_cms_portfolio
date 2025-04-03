@@ -14,11 +14,39 @@ import 'aos/dist/aos.css';
 import { useState, useEffect, useCallback  } from "react";
 import './globals.css'
 import ThemeContext from "./context/ThemeContext";
+import UserDetailContext from "@/app/context/UserDetailContext";
+import axios from "axios";
 
 export default function Index() {
   const [mode, setMode] = useState("darkMode");
   const [showMainContent, setShowMainContent] = useState(false);
   const [isStarterVisible, setIsStarterVisible] = useState(true);
+  const [userDetail, setUserDetail] = useState(null);
+  const [userDetailLoading, setUserDetailLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setUserDetailLoading(true);
+        const { data } = await axios.get("/api/auth/me");
+        console.log("data",data)
+        if(typeof window!==undefined) {
+            localStorage.setItem('userDetails',JSON.stringify(data))
+          }
+        setUserDetail(data.user);
+        setUserDetailLoading(false);
+      } catch (err) {
+        setUserDetail(null);
+        setError("Unauthorized");
+        setUserDetailLoading(false);
+      } finally {
+        setUserDetailLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const savedMode = localStorage.getItem("colorTheme") || "darkMode";
@@ -67,6 +95,7 @@ export default function Index() {
   }, [])
   return (
 <>
+<UserDetailContext.Provider value={{ userDetail, setUserDetail, userDetailLoading, setUserDetailLoading, error, setError }}>
 <ThemeContext.Provider  value={mode}>
 {isStarterVisible && (
   <div className="starter">
@@ -98,6 +127,7 @@ export default function Index() {
   </div>
 )}
 </ThemeContext.Provider>
+</UserDetailContext.Provider>
 </>
   );
 }

@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import Select, { MultiValue, OptionProps } from "react-select";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm, SubmitHandler } from "react-hook-form";
-import Image from "next/image";
+// import Image from "next/image";
 import CreatableSelect from "react-select/creatable";
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
@@ -21,6 +21,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { useImageUpload } from "@/hooks/useImageUpload";
+import { useEditor } from "@tiptap/react";
+import { Image } from "@tiptap/extension-image";
+import StarterKit from "@tiptap/starter-kit";
 
 type Variants = "blog" | "project";
 
@@ -100,6 +104,7 @@ export default function BlogForm({
     }
   });
 
+  const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [blogForm, setBlogForm] = useReducer(
     (prev: any, next: any) => {
@@ -119,12 +124,57 @@ export default function BlogForm({
   console.log("blogForm",blogForm)
 
   const updateContent = useCallback((data: editorProps) => {
+    console.log("updateContent",data)
     setBlogForm({ content: data.getJSON() });
   }, []);
 
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
-  console.log("date",startDate)
+
+  // const editor = useEditor({
+  //   extensions: [
+  //     StarterKit.configure({ history: false }),
+  //     Image,
+  //   ],
+  //   content: value?.content || "",
+  // });
+
+  // const handleImageUpload = useImageUpload(editor);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+    setUploading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      console.log("response",response)
+
+      const data = await response.json();
+      console.log("data",data)
+      if (data.filename) {
+        // ✅ FIX: Ensure correct URL for serving images from GridFS
+        const uploadedFileUrl = `/api/files/${data.filename}`;
+
+        // setBlogForm((prev: any) => ({ ...prev, cover_url: uploadedFileUrl }));
+        setBlogForm({cover_url: uploadedFileUrl});
+        setValue("cover_url", uploadedFileUrl);
+        console.log("uploadedFileUrl",uploadedFileUrl)
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const onSubmitBlog: SubmitHandler<Inputs> = async (data) => {
     let req;
@@ -156,11 +206,10 @@ export default function BlogForm({
     }
 
     const response = await req.json();
-    console.log("response",response)
 
     setLoading(false);
 
-    if (response?.data?.id) {
+    if (response?.data?._id) {
       router.push("/admin/blogs");
     }
   };
@@ -205,7 +254,7 @@ export default function BlogForm({
 
     setLoading(false);
 
-    if (response?.data?.id) {
+    if (response?.data?._id) {
       router.push("/admin/projects");
     }
   };
@@ -252,56 +301,34 @@ export default function BlogForm({
         )}
       </div>
       <div className="mt-5">
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="picture" className="capitalize">
-            {variant} Cover Image
-          </Label>
-          <div className="max-w-[120px]">
-            {blogForm?.cover_url && (
-              <Image
-                src={blogForm?.cover_url}
-                width={500}
-                height={500}
-                alt="image"
-                className="w-full h-auto rounded-md"
-              />
-            )}
-          </div>
-          <input type="hidden" value={blogForm.cover_url} {...register("cover_url", { required: true })}/>
-          <Input
-            id="picture"
-            type="file"
-            className={`mt-2 ${
-              errors.cover_url ? "bg-red-100 border-red-500" : ""
-            }`}
-            onChange={async (e) => {
-              let files = (e.target as HTMLInputElement).files;
-
-              if (files && files?.length > 0) {
-                const file = files[0];
-                const response = await fetch("/api/upload", {
-                  method: "POST",
-                  headers: {
-                    "Content-type": file.type,
-                    "X-Vercel-Filename": file.name,
-                  },
-                  body: file,
-                }).then((res) => res.json());
-
-                setBlogForm({
-                  cover_url: response.url,
-                });
-                setValue("cover_url", response.url)
-              }
-            }}
-          />
-          {errors.cover_url && (
-            <span className="text-sm mt-1 text-red-500">
-              This field is required
-            </span>
-          )}
+      <div className="grid w-full max-w-sm items-center gap-1.5">
+        <Label htmlFor="picture" className="capitalize">
+          {variant} Cover Image
+        </Label>
+        <div className="max-w-[120px]">
+          {/* {blogForm?.cover_url && (
+            <Image
+              src={blogForm?.cover_url}
+              width={500}
+              height={500}
+              alt="image"
+              className="w-full h-auto rounded-md"
+            />
+          )} */}
         </div>
+        <input type="hidden" value={blogForm.cover_url} {...register("cover_url", { required: true })} />
+        <Input
+          id="picture"
+          type="file"
+          className={`mt-2 ${errors.cover_url ? "bg-red-100 border-red-500" : ""}`}
+          accept="image/*"
+          onChange={handleUpload}
+          disabled={uploading}
+        />
+        {uploading && <p className="text-sm mt-1 text-gray-500">Uploading...</p>}
+        {errors.cover_url && <span className="text-sm mt-1 text-red-500">This field is required</span>}
       </div>
+    </div>
       <div className="mt-5">
         <Label htmlFor="content" className="capitalize">
           {variant} Content
@@ -312,6 +339,7 @@ export default function BlogForm({
           defaultValue={blogForm.content}
           className="border rounded pb-8 mt-2"
           disableLocalStorage
+          // extensions={[StarterKit.configure({ history: false }), Image]}
         />
       </div>
       {

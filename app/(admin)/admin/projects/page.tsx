@@ -39,7 +39,7 @@ export default function ProjectPage() {
     const response = await res.json();
 
     setResponse({
-      data: response.data,
+      data: response,
       loading: false,
     });
   };
@@ -103,15 +103,15 @@ export default function ProjectPage() {
         </div>
       ) : (
         <>
-          {response.data.length > 0 ? (
+          {response?.data?.length > 0 ? (
             <>
-              {response.data.map(
-                (d: { title: string; id: string; description: string }) => (
-                  <div key={d.id} className="mb-4 flex justify-between group">
+              {response?.data?.map(
+                (d: { title: string; _id: string; description: string }) => (
+                  <div key={d._id} className="mb-4 flex justify-between group">
                     <div>
                       <Link
                         className="text-xl font-semibold text-blue-600"
-                        href={`/admin/projects/${d.id}`}
+                        href={`/admin/projects/${d._id}`}
                       >
                         {d.title}
                       </Link>
@@ -138,7 +138,7 @@ export default function ProjectPage() {
                           <DialogFooter className="mt-5">
                             <Button
                               onClick={() => {
-                                deleteProject(d.id);
+                                deleteProject(d._id);
                               }}
                               variant={"destructive"}
                             >

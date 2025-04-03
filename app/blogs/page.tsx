@@ -38,7 +38,7 @@ function Blogs() {
       const response = await res.json();
       console.log("response", response);
       setResponse({
-        data: response.data,
+        data: response,
         loading: false,
       });
     } catch (error) {
@@ -72,8 +72,8 @@ function Blogs() {
           // </div>
         ) : (
           <div className="mt-8">
-            {response?.data?.map((blog: { id: string; title: string; description: string }, index: number) => (
-              <BlogCard key={blog.id} blog={blog} />
+            {response?.data?.map((blog: { _id: string; title: string; description: string }, index: number) => (
+              <BlogCard key={blog._id} blog={blog} />
               // <div key={index.toString()} className="mb-6 ">
               //   <Link
               //     href={`/blogs/${blog.id}`}

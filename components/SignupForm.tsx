@@ -1,37 +1,30 @@
-"use client"; // Ensures this is a Client Component
+"use client"; // ✅ Ensures this is a Client Component
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation"; // ✅ Import useRouter
+import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 
-export default function LoginForm() {
-  const router = useRouter(); // Use Next.js Client Router
+export default function SignupForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const message = searchParams.get("message");
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const signIn = async (e: React.FormEvent) => {
+  const signUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(""); // Clear previous errors
+    setError("");
 
     try {
-      const { data } = await axios.post("/api/auth/login", { email, password });
-      console.log("data", data);
-
-      // Save user details in localStorage if the data is valid
-      if (typeof window !== "undefined") {
-        localStorage.setItem("userDetails", JSON.stringify(data.user));
-      }
-
-      // Use Next.js Client Navigation Instead of `redirect`
-      router.push("/admin");
+      await axios.post("/api/auth/signup", { name, email, password });
+      console.log("Signup successful!");
+      router.push("/admin"); // ✅ Redirect to admin panel after signup
     } catch (err: any) {
-      setError(err?.response?.data?.msg || "Login failed. Try again.");
+      setError(err.response?.data?.msg || "Signup failed. Try again.");
     } finally {
       setLoading(false);
     }
@@ -40,8 +33,19 @@ export default function LoginForm() {
   return (
     <form
       className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground"
-      onSubmit={signIn} // Use `onSubmit`
+      onSubmit={signUp} // ✅ Use `onSubmit` instead of `action`
     >
+      <label className="text-md" htmlFor="name">
+        Name
+      </label>
+      <input
+        className="rounded-md px-4 py-2 bg-inherit border mb-6"
+        name="name"
+        placeholder="John Doe"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
       <label className="text-md" htmlFor="email">
         Email
       </label>
@@ -65,36 +69,25 @@ export default function LoginForm() {
         onChange={(e) => setPassword(e.target.value)}
         required
       />
-      <button
-        type="submit"
-        className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
-        disabled={loading}
-      >
-        {loading ? "Signing In..." : "Sign In"}
+      <button className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2" disabled={loading}>
+        {loading ? "Signing Up..." : "Sign Up"}
       </button>
-
       <div>
         <h1 className="text-sm text-[#5f5f5f]">
-          Don't have an account?{" "}
+          Have an account?{" "}
           <button
             type="button"
-            onClick={() => router.push("/signup")} // Use `router.push()`
+            onClick={() => router.push("/login")} // ✅ Use `router.push` instead of `redirect`
             className="text-foreground hover:text-blue-800 underline"
           >
-            Sign Up Now
+            Sign In Now
           </button>
         </h1>
       </div>
-
-      {error && (
-        <p className="mt-4 p-3 text-sm bg-red-500 text-white text-center rounded-md">
-          {error}
-        </p>
-      )}
-
-      {message && (
+      {error && <p className="mt-4 p-3 text-sm bg-red-500 text-white text-center rounded-md">{error}</p>}
+      {searchParams?.get("message") && (
         <p className="mt-4 p-3 text-sm bg-foreground/10 text-foreground text-center rounded-md">
-          {message}
+          {searchParams.get("message")}
         </p>
       )}
     </form>

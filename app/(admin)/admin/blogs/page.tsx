@@ -37,12 +37,15 @@ export default function BlogsPage() {
     const apiResponse = await fetch(`/api/blogs?term=${value}&page=${page}&limit=20`, {
       method: "GET",
     }).then((res) => res.json());
+    console.log("apiResponse",apiResponse)
 
     setResponse({
-      data: apiResponse.data,
+      data: apiResponse,
       loading: false,
     });
   };
+
+  console.log("response",response)
 
   const deleteBlog = async (id: string) => {
     setLoading(true);
@@ -104,22 +107,22 @@ export default function BlogsPage() {
         </div>
       </div>
 
-      {response.loading ? (
+      {response?.loading ? (
         <div className="animate-pulse">
           <div className="h-2 bg-slate-200 rounded col-span-2"></div>
           <div className="h-2 bg-slate-200 rounded col-span-1 mt-3"></div>
         </div>
       ) : (
         <>
-          {response.data.length > 0 ? (
+          {response?.data?.length > 0 ? (
             <>
               {response.data.map(
-                (d: { title: string; id: string; description: string }) => (
-                  <div key={d.id} className="mb-4 flex justify-between group">
+                (d: { title: string; _id: string; description: string }) => (
+                  <div key={d._id} className="mb-4 flex justify-between group">
                     <div>
                       <Link
                         className="text-xl font-semibold text-blue-600"
-                        href={`/admin/blogs/${d.id}`}
+                        href={`/admin/blogs/${d?._id}`}
                       >
                         {d.title}
                       </Link>
@@ -146,7 +149,7 @@ export default function BlogsPage() {
                           <DialogFooter className="mt-5">
                             <Button
                               onClick={() => {
-                                deleteBlog(d.id);
+                                deleteBlog(d._id);
                               }}
                               variant={"destructive"}
                             >

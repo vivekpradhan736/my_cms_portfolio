@@ -1,15 +1,22 @@
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { connectDB } from "@/db";
+import Project from "@/models/project";
+import Blog from "@/models/blog";
 
 export async function GET() {
-    const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
-    const { count: projectCount } = await supabase.from("projects").select("*", { count: "exact", head: true });
-    const { count: blogCount } = await supabase.from("blogs").select("*", { count: "exact", head: true });
+  try {
+    await connectDB(); // Ensure MongoDB connection
+
+    // Count documents in each collection
+    const projectCount = await Project.countDocuments();
+    const blogCount = await Blog.countDocuments();
 
     return NextResponse.json({
-        project: projectCount,
-        blog: blogCount
-    })
+      project: projectCount,
+      blog: blogCount,
+    });
+  } catch (error) {
+    console.error("Error fetching counts:", error);
+    return NextResponse.json({ message: "Error fetching counts", error }, { status: 500 });
+  }
 }

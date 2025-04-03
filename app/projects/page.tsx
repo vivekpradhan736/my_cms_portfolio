@@ -37,7 +37,7 @@ function Projects() {
     console.log("response", response)
 
     setResponse({
-      data: response.data,
+      data: response,
       loading: false,
     });
   };
@@ -68,8 +68,8 @@ function Projects() {
           </div>
         ) : (
           <div className="mt-8">
-            {response?.data?.map((project: { id: string; title: string; description: string; tags: string[]; cover_url: string }, index: number) => (
-              <ProjectCard key={project.id} project={project} />
+            {response?.data?.map((project: { _id: string; title: string; description: string; tags: string[]; cover_url: string }, index: number) => (
+              <ProjectCard key={project._id} project={project} />
               // <div key={index.toString()} className="mb-6 ">
               //   <Link
               //     href={`/projects/${project.id}`}
