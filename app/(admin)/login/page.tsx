@@ -9,7 +9,7 @@ export default function Login({
 
   return (
     <div className="h-screen w-72 flex justify-center flex-col m-auto items-center">
-      <LoginForm searchParams={searchParams} />
+      <LoginForm/>
     </div>
   )
 }

@@ -9,7 +9,7 @@ export default function Signup({
 
   return (
     <div className="h-screen w-72 flex justify-center flex-col m-auto items-center">
-      <SignupForm searchParams={searchParams} />
+      <SignupForm/>
     </div>
   )
 }
