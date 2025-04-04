@@ -1,4 +1,5 @@
 import SignupForm from "@/components/SignupForm"
+import { Suspense } from "react"
 
 export default function Signup({
   searchParams,
@@ -9,7 +10,9 @@ export default function Signup({
 
   return (
     <div className="h-screen w-72 flex justify-center flex-col m-auto items-center">
-      <SignupForm/>
+      <Suspense fallback={<div>Loading...</div>}>
+            <SignupForm />
+          </Suspense>
     </div>
   )
 }
