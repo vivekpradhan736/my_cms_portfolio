@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     // ✅ Parse FormData correctly
     const formData = await req.formData();
-    const file = formData.get("file") as Blob;
+    const file = formData.get("file") as File;
     console.log("test 3")
 
     if (!file) {
