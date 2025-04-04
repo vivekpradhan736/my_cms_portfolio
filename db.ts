@@ -23,7 +23,11 @@ const connectDB = async (): Promise<Mongoose> => {
 // Function to get GridFSBucket instance
 const getGridFSBucket = async (): Promise<GridFSBucket> => {
   const conn = await connectDB();
-  const db: Db = conn.connection.db;
+  const db = conn.connection.db;
+
+  if (!db) {
+    throw new Error("Database connection is not established.");
+  }
   return new GridFSBucket(db, { bucketName: "uploads" });
 };
 
