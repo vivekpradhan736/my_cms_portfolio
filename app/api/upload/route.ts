@@ -41,7 +41,6 @@ export async function POST(req: NextRequest) {
     console.log("test 7")
     readableStream.push(buffer);
     readableStream.push(null);
-    console.log("test 8")
 
     // ✅ Generate a unique filename
     const filename = `${Date.now()}-${file.name}`;
