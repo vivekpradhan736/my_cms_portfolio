@@ -20,7 +20,6 @@ const connectDB = async (): Promise<Mongoose> => {
   return newDB;
 };
 
-// Function to get GridFSBucket instance
 const getGridFSBucket = async (): Promise<GridFSBucket> => {
   const conn = await connectDB();
   const db = conn.connection.db;
