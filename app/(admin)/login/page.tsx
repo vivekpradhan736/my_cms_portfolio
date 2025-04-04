@@ -1,4 +1,5 @@
 import LoginForm from "@/components/LoginForm"
+import { Suspense } from "react"
 
 export default function Login({
   searchParams,
@@ -9,7 +10,9 @@ export default function Login({
 
   return (
     <div className="h-screen w-72 flex justify-center flex-col m-auto items-center">
-      <LoginForm/>
+      <Suspense fallback={<div>Loading...</div>}>
+      <LoginForm />
+    </Suspense>
     </div>
   )
 }
