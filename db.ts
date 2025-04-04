@@ -1,5 +1,5 @@
 import mongoose, { Mongoose } from "mongoose";
-import { GridFSBucket, Db } from "mongodb";
+import { GridFSBucket, Db } from "mongodb"; // ✅ Import `Db` from `mongodb`
 
 const URI: string = process.env.MONGO_URI as string;
 
@@ -14,19 +14,19 @@ const connectDB = async (): Promise<Mongoose> => {
     return cachedDB;
   }
 
-  const newDB = await mongoose.connect(URI, {
-  });
+  const newDB = await mongoose.connect(URI, {});
   cachedDB = newDB;
   return newDB;
 };
 
 const getGridFSBucket = async (): Promise<GridFSBucket> => {
   const conn = await connectDB();
-  const db = conn.connection.db;
+  const db = conn.connection.db as unknown as Db; // ✅ Convert to `unknown` first
 
   if (!db) {
     throw new Error("Database connection is not established.");
   }
+
   return new GridFSBucket(db, { bucketName: "uploads" });
 };
 
